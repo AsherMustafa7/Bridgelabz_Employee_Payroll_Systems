@@ -1,0 +1,47 @@
+
+/*
+ * File: EmployeePayrollDTO.java
+ * Description: Data Transfer Object used to receive employee
+ *              name and salary from REST API requests.
+ *
+ * Name: Asher Mustafa
+ * @author Asher
+ * Date: 16/11/2026
+ */
+
+package com.bridgelabz.employeepayrollapp.dto;
+
+public class EmployeePayrollDTO {
+
+    // [Asher Mustafa]: Employee details received from the client.
+    private String name;
+    private double salary;
+
+    // [Asher Mustafa]: Default constructor required for JSON deserialization.
+    public EmployeePayrollDTO() {
+    }
+
+    // [Asher Mustafa]: Parameterized constructor.
+    public EmployeePayrollDTO(String name, double salary) {
+        this.name = name;
+        this.salary = salary;
+    }
+
+    // [Asher Mustafa]: Getter and setter for employee name.
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // [Asher Mustafa]: Getter and setter for employee salary.
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+}

@@ -1,9 +1,8 @@
 
 /*
  * File: EmployeePayrollController.java
- * Description: REST Controller for handling Employee Payroll API requests.
- *              Demonstrates GET, GET by ID, POST, PUT and DELETE methods.
- *              This UC focuses on REST connectivity and data transmission.
+ * Description: REST Controller demonstrating HTTP methods
+ *              using EmployeePayrollDTO and EmployeePayrollModel.
  *
  * Name: Asher Mustafa
  * @author Asher
@@ -11,6 +10,9 @@
  */
 
 package com.bridgelabz.employeepayrollapp.controller;
+
+import com.bridgelabz.employeepayrollapp.dto.EmployeePayrollDTO;
+import com.bridgelabz.employeepayrollapp.model.EmployeePayrollModel;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,56 +24,53 @@ import java.util.Map;
 @RequestMapping("/employeepayrollservice")
 public class EmployeePayrollController {
 
-    // [Asher Mustafa]: GET: Check whether the Employee Payroll REST service is running.
+    // [Asher Mustafa]: GET: Check whether the Employee Payroll service is running.
     @GetMapping("/")
     public ResponseEntity<Map<String, String>> getAllEmployees() {
-
         return ResponseEntity.ok(
                 Map.of("message", "Employee Payroll Service is running")
         );
     }
 
-    // [Asher Mustafa]: GET by ID: Receive an employee ID and return a sample response.
+    // [Asher Mustafa]: GET by ID: Return sample employee model data.
     @GetMapping("/get/{id}")
-    public ResponseEntity<Map<String, Object>> getEmployeeById(
+    public ResponseEntity<EmployeePayrollModel> getEmployeeById(
             @PathVariable("id") int id) {
 
-        return ResponseEntity.ok(
-                Map.of(
-                        "message", "Employee ID received successfully",
-                        "id", id
-                )
-        );
+        EmployeePayrollModel employee =
+                new EmployeePayrollModel("Lisa", 2000);
+
+        return ResponseEntity.ok(employee);
     }
 
-    // [Asher Mustafa]: POST: Receive employee data in JSON format.
+    // [Asher Mustafa]: POST: Receive DTO and return the corresponding Model.
     @PostMapping("/create")
-    public ResponseEntity<Map<String, Object>> createEmployee(
-            @RequestBody Map<String, Object> employeeData) {
+    public ResponseEntity<EmployeePayrollModel> createEmployee(
+            @RequestBody EmployeePayrollDTO employeeDTO) {
+
+        EmployeePayrollModel employee = new EmployeePayrollModel(
+                employeeDTO.getName(),
+                employeeDTO.getSalary()
+        );
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(
-                        Map.of(
-                                "message", "Employee data received successfully",
-                                "employee", employeeData
-                        )
-                );
+                .body(employee);
     }
 
-    // [Asher Mustafa]: PUT: Receive updated employee data in JSON format.
+    // [Asher Mustafa]: PUT: Receive updated DTO and return the corresponding Model.
     @PutMapping("/update")
-    public ResponseEntity<Map<String, Object>> updateEmployee(
-            @RequestBody Map<String, Object> employeeData) {
+    public ResponseEntity<EmployeePayrollModel> updateEmployee(
+            @RequestBody EmployeePayrollDTO employeeDTO) {
 
-        return ResponseEntity.ok(
-                Map.of(
-                        "message", "Employee update data received successfully",
-                        "employee", employeeData
-                )
+        EmployeePayrollModel employee = new EmployeePayrollModel(
+                employeeDTO.getName(),
+                employeeDTO.getSalary()
         );
+
+        return ResponseEntity.ok(employee);
     }
 
-    // [Asher Mustafa]: DELETE: Receive an employee ID for the delete request.
+    // [Asher Mustafa]: DELETE: Receive employee ID for the delete request.
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Map<String, Object>> deleteEmployee(
             @PathVariable("id") int id) {
