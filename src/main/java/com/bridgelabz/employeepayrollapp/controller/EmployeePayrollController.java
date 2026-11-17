@@ -1,8 +1,8 @@
 
 /*
  * File: EmployeePayrollController.java
- * Description: REST Controller demonstrating HTTP methods
- *              using EmployeePayrollDTO and EmployeePayrollModel.
+ * Description: REST Controller that delegates Employee Payroll
+ *              operations to the Service Layer.
  *
  * Name: Asher Mustafa
  * @author Asher
@@ -13,7 +13,9 @@ package com.bridgelabz.employeepayrollapp.controller;
 
 import com.bridgelabz.employeepayrollapp.dto.EmployeePayrollDTO;
 import com.bridgelabz.employeepayrollapp.model.EmployeePayrollModel;
+import com.bridgelabz.employeepayrollapp.service.EmployeePayrollService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,16 @@ import java.util.Map;
 @RequestMapping("/employeepayrollservice")
 public class EmployeePayrollController {
 
+    private final EmployeePayrollService employeePayrollService;
+
+    // [Asher Mustafa]: Inject the Service object using Spring Dependency Injection.
+    @Autowired
+    public EmployeePayrollController(
+            EmployeePayrollService employeePayrollService) {
+
+        this.employeePayrollService = employeePayrollService;
+    }
+
     // [Asher Mustafa]: GET: Check whether the Employee Payroll service is running.
     @GetMapping("/")
     public ResponseEntity<Map<String, String>> getAllEmployees() {
@@ -32,54 +44,47 @@ public class EmployeePayrollController {
         );
     }
 
-    // [Asher Mustafa]: GET by ID: Return sample employee model data.
+    // [Asher Mustafa]: GET by ID: Delegate employee retrieval to the Service Layer.
     @GetMapping("/get/{id}")
     public ResponseEntity<EmployeePayrollModel> getEmployeeById(
             @PathVariable("id") int id) {
 
         EmployeePayrollModel employee =
-                new EmployeePayrollModel("Lisa", 2000);
+                employeePayrollService.getEmployeePayrollDataById(id);
 
         return ResponseEntity.ok(employee);
     }
 
-    // [Asher Mustafa]: POST: Receive DTO and return the corresponding Model.
+    // [Asher Mustafa]: POST: Delegate employee creation to the Service Layer.
     @PostMapping("/create")
     public ResponseEntity<EmployeePayrollModel> createEmployee(
             @RequestBody EmployeePayrollDTO employeeDTO) {
 
-        EmployeePayrollModel employee = new EmployeePayrollModel(
-                employeeDTO.getName(),
-                employeeDTO.getSalary()
-        );
+        EmployeePayrollModel employee =
+                employeePayrollService.addEmployeePayrollData(employeeDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(employee);
+        return ResponseEntity.status(HttpStatus.CREATED).body(employee);
     }
 
-    // [Asher Mustafa]: PUT: Receive updated DTO and return the corresponding Model.
+    // [Asher Mustafa]: PUT: Delegate employee update to the Service Layer.
     @PutMapping("/update")
     public ResponseEntity<EmployeePayrollModel> updateEmployee(
             @RequestBody EmployeePayrollDTO employeeDTO) {
 
-        EmployeePayrollModel employee = new EmployeePayrollModel(
-                employeeDTO.getName(),
-                employeeDTO.getSalary()
-        );
+        EmployeePayrollModel employee =
+                employeePayrollService.updateEmployeePayrollData(employeeDTO);
 
         return ResponseEntity.ok(employee);
     }
 
-    // [Asher Mustafa]: DELETE: Receive employee ID for the delete request.
+    // [Asher Mustafa]: DELETE: Delegate delete request handling to the Service Layer.
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Map<String, Object>> deleteEmployee(
             @PathVariable("id") int id) {
 
-        return ResponseEntity.ok(
-                Map.of(
-                        "message", "Employee delete request received successfully",
-                        "id", id
-                )
-        );
+        Map<String, Object> response =
+                employeePayrollService.deleteEmployeePayrollData(id);
+
+        return ResponseEntity.ok(response);
     }
 }
