@@ -1,8 +1,8 @@
 
 /*
  * File: EmployeePayrollControllerTest.java
- * Description: JUnit tests for Employee Payroll REST endpoints
- *              using DTO and Model classes.
+ * Description: JUnit tests for Employee Payroll Controller
+ *              with Service Layer integration.
  *
  * Name: Asher Mustafa
  * @author Asher
@@ -10,6 +10,8 @@
  */
 
 package com.bridgelabz.employeepayrollapp.controller;
+
+import com.bridgelabz.employeepayrollapp.service.EmployeePayrollService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,11 +27,13 @@ class EmployeePayrollControllerTest {
 
     private MockMvc mockMvc;
 
-    // [Asher Mustafa]: Initialize controller before every test.
+    // [Asher Mustafa]: Initialize Controller with its Service dependency.
     @BeforeEach
     void setUp() {
+        EmployeePayrollService service = new EmployeePayrollService();
+
         EmployeePayrollController controller =
-                new EmployeePayrollController();
+                new EmployeePayrollController(service);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
@@ -52,7 +56,7 @@ class EmployeePayrollControllerTest {
                 .andExpect(jsonPath("$.salary").value(2000));
     }
 
-    // [Asher Mustafa]: Test POST using EmployeePayrollDTO.
+    // [Asher Mustafa]: Test POST employee request.
     @Test
     void testCreateEmployee() throws Exception {
         String employeeJson = """
@@ -70,7 +74,7 @@ class EmployeePayrollControllerTest {
                 .andExpect(jsonPath("$.salary").value(2000));
     }
 
-    // [Asher Mustafa]: Test PUT using EmployeePayrollDTO.
+    // [Asher Mustafa]: Test PUT employee request.
     @Test
     void testUpdateEmployee() throws Exception {
         String employeeJson = """
@@ -88,7 +92,7 @@ class EmployeePayrollControllerTest {
                 .andExpect(jsonPath("$.salary").value(2500));
     }
 
-    // [Asher Mustafa]: Test DELETE employee endpoint.
+    // [Asher Mustafa]: Test DELETE employee request.
     @Test
     void testDeleteEmployee() throws Exception {
         mockMvc.perform(delete("/employeepayrollservice/delete/1"))
